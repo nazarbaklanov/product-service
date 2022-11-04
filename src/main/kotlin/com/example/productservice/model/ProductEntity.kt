@@ -8,9 +8,16 @@ import javax.persistence.*
 data class ProductEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long? = 0,
-    var name: String,
-    var price: BigDecimal,
-    var cashback: BigDecimal,
-    var image: String
+    val id: Long? = 0,
+    val name: String,
+    val price: BigDecimal,
+    val cashback: BigDecimal,
+    val image: String,
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "products_and_shipping_countries",
+        joinColumns = [JoinColumn(name = "products_id", referencedColumnName = "id")],
+        inverseJoinColumns = [JoinColumn(name = "product_shipping_countries_id", referencedColumnName = "id")]
+    )
+    val shippingCountries: Set<ShippingCountryEntity>
 )
