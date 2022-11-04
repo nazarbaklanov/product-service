@@ -68,9 +68,8 @@ class ProductServiceImpl(
 
     override fun search(s: String): List<ProductResponseDto> {
         val listProducts = productRepository.search(s)
-        val listProductResponseDto = emptyList<ProductResponseDto>()
-        listProducts.forEach { listProductResponseDto.plus(
-            conversionService.convert(it, ProductResponseDto::class.java)) }
-        return listProductResponseDto
+        return listProducts.map { conversionService.convert(it, ProductResponseDto::class.java)
+            ?: throw RuntimeException("Error convert")}
+
     }
 }
