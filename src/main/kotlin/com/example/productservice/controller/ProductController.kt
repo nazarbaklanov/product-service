@@ -2,11 +2,9 @@ package com.example.productservice.controller
 
 import com.example.productservice.dto.ProductRequestDto
 import com.example.productservice.dto.ProductResponseDto
-import com.example.productservice.model.ProductEntity
 import com.example.productservice.service.ProductService
 import io.swagger.annotations.ApiOperation
 import org.slf4j.LoggerFactory
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
@@ -33,16 +31,16 @@ class ProductController(private val productService: ProductService) {
 
     @GetMapping("{id}")
     @ApiOperation("Get product from DB by product ID")
-    fun getProductById(@PathVariable id: Long): ProductResponseDto? {
+    fun getProductById(@PathVariable id: Long): ProductResponseDto {
         logger.info("[CONTROLLER] Get product from DB by product ID = $id")
         return productService.findOneById(id)
     }
 
     @DeleteMapping("/{id}")
     @ApiOperation("Delete product from DM by product ID")
-    fun deleteProductById(@PathVariable id: Long): ProductResponseDto {
+    fun deleteProductById(@PathVariable id: Long) {
         logger.info("[CONTROLLER] Delete product from DM by product ID = $id")
-        return productService.deleteById(id)
+        productService.deleteById(id)
     }
 
     @GetMapping("/search")

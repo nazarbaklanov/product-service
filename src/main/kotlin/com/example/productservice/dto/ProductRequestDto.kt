@@ -6,11 +6,12 @@ import javax.validation.constraints.NotBlank
 
 data class ProductRequestDto(
     @field:NotBlank(message = "Name of product must not be blank")
-    var name: String,
+    val name: String,
     @field:Min(value = 0, message = "Price of product must not be negative")
-    var price: BigDecimal,
+    val price: BigDecimal,
     @field:Min(value = 0, message = "Cashback must not be negative")
-    var cashback: BigDecimal,
+    val cashback: BigDecimal,
     @field: NotBlank(message = "Image of product must not be blank")
-    var image: String
+    val image: String,
+    val shippingCountryIds: Set<Long>
 )

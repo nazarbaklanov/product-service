@@ -15,7 +15,7 @@ class WebSecurityConfig(
     private val username: String,
     @Value("\${server.basic.auth.password}")
     private val password: String,
-    private val passwodrEncoder: PasswodrEncoder
+    private val passwodrEncoder: ApplicationConfig
 ): WebSecurityConfigurerAdapter() {
     @Throws(Exception::class)
     override fun configure(httpSecurity: HttpSecurity) {

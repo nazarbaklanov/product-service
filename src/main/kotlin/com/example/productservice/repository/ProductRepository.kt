@@ -8,8 +8,6 @@ import org.springframework.stereotype.Repository
 @Repository
 interface ProductRepository : JpaRepository<ProductEntity, Long> {
 
-    fun findOneById(id: Long): ProductEntity?
-
     @Query("select * from products where name like %?1%", nativeQuery = true)
     fun search(s: String): List<ProductEntity>
 }
