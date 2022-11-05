@@ -7,7 +7,7 @@ import com.example.productservice.repository.ProductRepository
 import com.example.productservice.service.ProductService
 import org.slf4j.LoggerFactory
 import org.springframework.core.convert.ConversionService
-import org.springframework.data.domain.Sort
+import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
@@ -31,9 +31,9 @@ class ProductServiceImpl(
             ?: throw RuntimeException("Error convert Product to ProductResponseDto")
     }
 
-    override fun getAll(): List<ProductResponseDto> {
+    override fun getAll(pageable: Pageable): List<ProductResponseDto> {
         logger.info("[SERVICE] findAll")
-        val listProducts: List<ProductEntity> = productRepository.findAll()
+        val listProducts: List<ProductEntity> = productRepository.findAll(pageable).toList()
         return listProducts.map {
             conversionService.convert(it, ProductResponseDto::class.java)
                 ?: throw RuntimeException("Error convert")
@@ -55,8 +55,8 @@ class ProductServiceImpl(
     override fun deleteById(id: Long) =
         productRepository.deleteById(id)
 
-    override fun search(s: String, sort: Sort): List<ProductResponseDto> {
-        val listProducts = productRepository.search(s, sort)
+    override fun search(s: String, pageable: Pageable): List<ProductResponseDto> {
+        val listProducts = productRepository.search(s, pageable)
         return listProducts.map {
             conversionService.convert(it, ProductResponseDto::class.java)
                 ?: throw RuntimeException("Error convert")
