@@ -19,6 +19,7 @@ class ProductToResponseDtoConverter : Converter<ProductEntity, ProductResponseDt
             price = source.price,
             cashback = source.cashback,
             image = source.image,
+            description = source.description,
             shippingCountryIds = source.shippingCountries.map { it.id!! }.toSet()
         )
     }

@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository
 @Repository
 interface ProductRepository : JpaRepository<ProductEntity, Long> {
 
-    @Query("select * from products where name like %?1%", nativeQuery = true)
-    fun search(s: String): List<ProductEntity>
+    @Query("select p from ProductEntity p where p.name like %?1% or p.description like %?1%")
+    fun search(s: String, sort: org.springframework.data.domain.Sort): List<ProductEntity>
 }

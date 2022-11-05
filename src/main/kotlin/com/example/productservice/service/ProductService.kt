@@ -2,6 +2,7 @@ package com.example.productservice.service
 
 import com.example.productservice.dto.ProductRequestDto
 import com.example.productservice.dto.ProductResponseDto
+import org.springframework.data.domain.Sort
 
 interface ProductService {
     fun save(requestDto: ProductRequestDto): ProductResponseDto
@@ -12,5 +13,5 @@ interface ProductService {
 
     fun deleteById(id: Long)
 
-    fun search(s: String): List<ProductResponseDto>
+    fun search(s: String, sort: Sort): List<ProductResponseDto>
 }

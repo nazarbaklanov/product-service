@@ -5,6 +5,7 @@ import com.example.productservice.dto.ProductResponseDto
 import com.example.productservice.service.ProductService
 import io.swagger.annotations.ApiOperation
 import org.slf4j.LoggerFactory
+import org.springframework.data.domain.Sort
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
@@ -44,10 +45,20 @@ class ProductController(private val productService: ProductService) {
     }
 
     @GetMapping("/search")
-    @ApiOperation("Get list products, which name contains string: s")
+    @ApiOperation(
+        "Get list products, which name or description contains string: s, "
+                + "and sorting by sort: ASC or DESC"
+    )
     fun search(
-        @RequestParam("s", defaultValue = "") s: String
+        @RequestParam("s", defaultValue = "") s: String,
+        @RequestParam("sort", defaultValue = "") sort: String
     ): List<ProductResponseDto> {
-        return productService.search(s)
+        var direction = Sort.unsorted()
+        if (sort == "asc") {
+            direction = Sort.by(Sort.Direction.ASC, "price")
+        } else if (sort == "desc") {
+            direction = Sort.by(Sort.Direction.DESC, "price")
+        }
+        return productService.search(s, direction)
     }
 }

@@ -15,7 +15,7 @@ import java.util.*
 class DataSeeder(
     private val productRepository: ProductRepository,
     private val shippingRepository: ProductShipingCountryRepository
-    ): ApplicationRunner {
+) : ApplicationRunner {
 
     private val logger = LoggerFactory.getLogger(this::class.java)
 
@@ -49,15 +49,16 @@ class DataSeeder(
             val ua = Random().nextLong(1, 5)
 
             val product = ProductEntity(
-            name = "Apple iPhone #" + i,
-            price = BigDecimal(Random().nextInt(25000, 100000)),
-            cashback = BigDecimal(Random().nextInt(0, 1000)),
-            image = "http://lorempixel.com/200/200?" + Random().nextInt(10000),
-            shippingCountries = listOf(
-                ShippingCountryEntity(id = usa, name = shippingRepository.findById(usa).get().name),
-                ShippingCountryEntity(id = ger, name = shippingRepository.findById(ger).get().name),
-                ShippingCountryEntity(id = ua, name = shippingRepository.findById(ua).get().name)
-            ).toSet()
+                name = "Apple iPhone #" + i,
+                price = BigDecimal(Random().nextInt(25000, 100000)),
+                cashback = BigDecimal(Random().nextInt(0, 1000)),
+                image = "http://lorempixel.com/200/200?" + Random().nextInt(10000),
+                description = "Description #" + i + 1,
+                shippingCountries = listOf(
+                    ShippingCountryEntity(id = usa, name = shippingRepository.findById(usa).get().name),
+                    ShippingCountryEntity(id = ger, name = shippingRepository.findById(ger).get().name),
+                    ShippingCountryEntity(id = ua, name = shippingRepository.findById(ua).get().name)
+                ).toSet()
             )
             productRepository.save(product)
         }

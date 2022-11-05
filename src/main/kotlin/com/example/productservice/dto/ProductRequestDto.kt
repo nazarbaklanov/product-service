@@ -13,5 +13,6 @@ data class ProductRequestDto(
     val cashback: BigDecimal,
     @field: NotBlank(message = "Image of product must not be blank")
     val image: String,
+    val description: String,
     val shippingCountryIds: Set<Long>
 )
