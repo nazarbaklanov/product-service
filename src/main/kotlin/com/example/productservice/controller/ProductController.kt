@@ -5,6 +5,7 @@ import com.example.productservice.dto.ProductResponseDto
 import com.example.productservice.service.ProductService
 import io.swagger.annotations.ApiOperation
 import org.slf4j.LoggerFactory
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
@@ -24,10 +25,20 @@ class ProductController(private val productService: ProductService) {
     }
 
     @GetMapping()
-    @ApiOperation("Get list of all product from DB")
-    fun getAllProducts(): List<ProductResponseDto> {
+    @ApiOperation("Get list of all product from DB and sorting by sort: ASC or DESC")
+    fun getAllProducts(
+        @RequestParam("sort", defaultValue = "asc") sort: String,
+        @RequestParam("page", defaultValue = "0") page: Int,
+        @RequestParam("perPage", defaultValue = "10") perPage: Int
+    ): List<ProductResponseDto> {
+        var direction = Sort.unsorted()
+        if (sort == "asc") {
+            direction = Sort.by(Sort.Direction.ASC, "price")
+        } else if (sort == "desc") {
+            direction = Sort.by(Sort.Direction.DESC, "price")
+        }
         logger.info("[CONTROLLER] Get all product from DB")
-        return productService.getAll()
+        return productService.getAll(PageRequest.of(page, perPage, direction))
     }
 
     @GetMapping("{id}")
@@ -51,7 +62,9 @@ class ProductController(private val productService: ProductService) {
     )
     fun search(
         @RequestParam("s", defaultValue = "") s: String,
-        @RequestParam("sort", defaultValue = "") sort: String
+        @RequestParam("sort", defaultValue = "asc") sort: String,
+        @RequestParam("page", defaultValue = "0") page: Int,
+        @RequestParam("perPage", defaultValue = "10") perPage: Int
     ): List<ProductResponseDto> {
         var direction = Sort.unsorted()
         if (sort == "asc") {
@@ -59,6 +72,6 @@ class ProductController(private val productService: ProductService) {
         } else if (sort == "desc") {
             direction = Sort.by(Sort.Direction.DESC, "price")
         }
-        return productService.search(s, direction)
+        return productService.search(s, PageRequest.of(page, perPage, direction))
     }
 }

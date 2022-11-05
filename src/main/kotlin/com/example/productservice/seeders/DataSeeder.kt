@@ -3,7 +3,7 @@ package com.example.productservice.seeders
 import com.example.productservice.model.ProductEntity
 import com.example.productservice.model.ShippingCountryEntity
 import com.example.productservice.repository.ProductRepository
-import com.example.productservice.repository.ProductShipingCountryRepository
+import com.example.productservice.repository.ProductShippingCountryRepository
 import org.slf4j.LoggerFactory
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.ApplicationRunner
@@ -14,7 +14,7 @@ import java.util.*
 @Component
 class DataSeeder(
     private val productRepository: ProductRepository,
-    private val shippingRepository: ProductShipingCountryRepository
+    private val shippingRepository: ProductShippingCountryRepository
 ) : ApplicationRunner {
 
     private val logger = LoggerFactory.getLogger(this::class.java)
@@ -47,7 +47,6 @@ class DataSeeder(
             val usa = Random().nextLong(1, 5)
             val ger = Random().nextLong(1, 5)
             val ua = Random().nextLong(1, 5)
-
             val product = ProductEntity(
                 name = "Apple iPhone #" + i,
                 price = BigDecimal(Random().nextInt(25000, 100000)),

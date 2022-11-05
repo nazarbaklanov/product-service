@@ -5,4 +5,4 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface ProductShipingCountryRepository : JpaRepository<ShippingCountryEntity, Long>
+interface ProductShippingCountryRepository : JpaRepository<ShippingCountryEntity, Long>
