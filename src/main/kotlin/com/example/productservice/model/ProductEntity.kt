@@ -13,6 +13,7 @@ data class ProductEntity(
     val price: BigDecimal,
     val cashback: BigDecimal,
     val image: String,
+    val description: String,
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "products_and_shipping_countries",

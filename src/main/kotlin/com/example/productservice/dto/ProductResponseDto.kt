@@ -8,5 +8,6 @@ data class ProductResponseDto(
     val price: BigDecimal,
     val cashback: BigDecimal,
     val image: String,
+    val description: String,
     val shippingCountryIds: Set<Long>
 )

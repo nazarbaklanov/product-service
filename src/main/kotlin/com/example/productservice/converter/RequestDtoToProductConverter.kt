@@ -20,6 +20,7 @@ class RequestDtoToProductConverter(
             price = source.price,
             cashback = source.cashback,
             image = source.image,
+            description = source.description,
             shippingCountries = source.shippingCountryIds
                 .map { productShippingCountiesService.findShippingCountryById(it) }
                 .toSet()
