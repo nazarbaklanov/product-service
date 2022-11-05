@@ -62,4 +62,12 @@ class ProductServiceImpl(
                 ?: throw RuntimeException("Error convert")
         }
     }
+
+    override fun countSearch(s: String): Int {
+        return productRepository.countSearch(s)
+    }
+
+    override fun countAll(): Int {
+        return productRepository.countAll()
+    }
 }
