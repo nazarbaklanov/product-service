@@ -1,12 +1,15 @@
 package com.example.productservice.controller
 
+import com.example.productservice.dto.PaginationResponse
 import com.example.productservice.dto.ProductRequestDto
 import com.example.productservice.dto.ProductResponseDto
 import com.example.productservice.service.ProductService
 import io.swagger.annotations.ApiOperation
+import io.swagger.annotations.ApiParam
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
@@ -27,18 +30,24 @@ class ProductController(private val productService: ProductService) {
     @GetMapping()
     @ApiOperation("Get list of all product from DB and sorting by sort: ASC or DESC")
     fun getAllProducts(
-        @RequestParam("sort", defaultValue = "asc") sort: String,
-        @RequestParam("page", defaultValue = "0") page: Int,
+        @ApiParam(value = "ASC or DESC")
+        @RequestParam("sort", defaultValue = "") sort: String,
+        @ApiParam(value = "Number page for view, from 1")
+        @RequestParam("page", defaultValue = "1") page: Int,
+        @ApiParam(value = "Quantity items for view in one page, from 1")
         @RequestParam("perPage", defaultValue = "10") perPage: Int
-    ): List<ProductResponseDto> {
-        var direction = Sort.unsorted()
-        if (sort == "asc") {
-            direction = Sort.by(Sort.Direction.ASC, "price")
-        } else if (sort == "desc") {
-            direction = Sort.by(Sort.Direction.DESC, "price")
-        }
+    ): ResponseEntity<Any> {
         logger.info("[CONTROLLER] Get all product from DB")
-        return productService.getAll(PageRequest.of(page, perPage, direction))
+        val direction = sort(sort)
+        val total = productService.countAll()
+        return ResponseEntity.ok(
+            PaginationResponse(
+                data = productService.getAll(PageRequest.of(page - 1, perPage, direction)),
+                total,
+                page,
+                last_page = (total / perPage)
+            )
+        )
     }
 
     @GetMapping("{id}")
@@ -61,17 +70,35 @@ class ProductController(private val productService: ProductService) {
                 + "and sorting by sort: ASC or DESC"
     )
     fun search(
+        @ApiParam(value = "String to filter products by name and description")
         @RequestParam("s", defaultValue = "") s: String,
-        @RequestParam("sort", defaultValue = "asc") sort: String,
-        @RequestParam("page", defaultValue = "0") page: Int,
+        @ApiParam(value = "ASC or DESC")
+        @RequestParam("sort", defaultValue = "") sort: String,
+        @ApiParam(value = "Number page for view, from 1")
+        @RequestParam("page", defaultValue = "1") page: Int,
+        @ApiParam(value = "Quantity items for view in one page, from 1")
         @RequestParam("perPage", defaultValue = "10") perPage: Int
-    ): List<ProductResponseDto> {
+    ): ResponseEntity<Any> {
+        logger.info("[CONTROLLER] Search product from DB")
+        val direction = sort(sort)
+        val total = productService.countSearch(s)
+        return ResponseEntity.ok(
+            PaginationResponse(
+                data = productService.search(s, PageRequest.of(page - 1, perPage, direction)),
+                total,
+                page,
+                last_page = (total / perPage)
+            )
+        )
+    }
+
+    private fun sort(sort: String): Sort {
         var direction = Sort.unsorted()
         if (sort == "asc") {
             direction = Sort.by(Sort.Direction.ASC, "price")
         } else if (sort == "desc") {
             direction = Sort.by(Sort.Direction.DESC, "price")
         }
-        return productService.search(s, PageRequest.of(page, perPage, direction))
+        return direction
     }
 }

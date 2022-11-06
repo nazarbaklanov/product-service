@@ -14,4 +14,8 @@ interface ProductService {
     fun deleteById(id: Long)
 
     fun search(s: String, pageable: Pageable): List<ProductResponseDto>
+
+    fun countSearch(s: String): Int
+
+    fun countAll(): Int
 }
