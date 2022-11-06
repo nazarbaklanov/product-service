@@ -5,7 +5,7 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "products")
-data class ProductEntity(
+class ProductEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = 0,

@@ -2,6 +2,8 @@ package com.example.productservice.service.impl
 
 import com.example.productservice.dto.ProductRequestDto
 import com.example.productservice.dto.ProductResponseDto
+import com.example.productservice.exception.ConvertorErrorException
+import com.example.productservice.exception.EntityNotFoundException
 import com.example.productservice.model.ProductEntity
 import com.example.productservice.repository.ProductRepository
 import com.example.productservice.service.ProductService
@@ -28,7 +30,7 @@ class ProductServiceImpl(
             ?: throw RuntimeException("Error convert ProductResponseDto to Product")
         val saveProduct = productRepository.save(product)
         return conversionService.convert(saveProduct, ProductResponseDto::class.java)
-            ?: throw RuntimeException("Error convert Product to ProductResponseDto")
+            ?: throw ConvertorErrorException("Convertor error: from Product to ProductResponseDto")
     }
 
     override fun getAll(pageable: Pageable): List<ProductResponseDto> {
@@ -36,15 +38,14 @@ class ProductServiceImpl(
         val listProducts: List<ProductEntity> = productRepository.findAll(pageable).toList()
         return listProducts.map {
             conversionService.convert(it, ProductResponseDto::class.java)
-                ?: throw RuntimeException("Error convert")
+                ?: throw ConvertorErrorException("Convertor error: from Product to ProductResponseDto")
         }
     }
 
     override fun findOneById(id: Long): ProductResponseDto {
         logger.info("[SERVICE] findOneById, ID: $id")
-        val product: ProductEntity = productRepository.findById(id).orElseThrow {
-            NoSuchElementException("Product with id=$id not found")
-        }
+        val product: ProductEntity = productRepository.findById(id)
+            .orElseThrow { EntityNotFoundException("Product with id=$id not found") }
         return conversionService.convert(product, ProductResponseDto::class.java)
             ?: throw ResponseStatusException(
                 HttpStatus.NOT_FOUND,
@@ -59,7 +60,7 @@ class ProductServiceImpl(
         val listProducts = productRepository.search(s, pageable)
         return listProducts.map {
             conversionService.convert(it, ProductResponseDto::class.java)
-                ?: throw RuntimeException("Error convert")
+                ?: throw ConvertorErrorException("Convertor error: from Product to ProductResponseDto")
         }
     }
 
@@ -68,6 +69,6 @@ class ProductServiceImpl(
     }
 
     override fun countAll(): Int {
-        return productRepository.countAll()
+        return productRepository.countGetAll()
     }
 }
